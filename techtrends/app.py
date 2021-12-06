@@ -1,4 +1,5 @@
 import sqlite3
+import logging
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
@@ -10,7 +11,7 @@ db_connection_count = 0
 # This function connects to database with the name `database.db`
 def get_db_connection():
     global db_connection_count
-    
+
     connection = sqlite3.connect('database.db')
     connection.row_factory = sqlite3.Row
 
@@ -44,13 +45,17 @@ def index():
 def post(post_id):
     post = get_post(post_id)
     if post is None:
-      return render_template('404.html'), 404
+        app.logger.info(f'A non-existing article is accessed')
+        return render_template('404.html'), 404
     else:
-      return render_template('post.html', post=post)
+        title = post['title']
+        app.logger.info(f'Article "{title}" retrieved!')
+        return render_template('post.html', post=post)
 
 # Define the About Us page
 @app.route('/about')
 def about():
+    app.logger.info(f'The About Us page is retrieved successfully')
     return render_template('about.html')
 
 # Define the post creation functionality 
@@ -71,6 +76,7 @@ def create():
 
             return redirect(url_for('index'))
 
+    app.logger.info(f'A new article "{title}" is created')
     return render_template('create.html')
 
 # Define the Application Healthcheck page
@@ -82,6 +88,7 @@ def healthcheck():
         mimetype = 'application/json'
     )
 
+    app.logger.info(f'Healthcheck page is retrieved successfully')
     return response
 
 # Define the Application Metrics page
@@ -97,8 +104,10 @@ def metrics():
         mimetype = 'application/json'
     )
 
+    app.logger.info(f'Metrics page is retrieved successfully')
     return response
 
 # start the application on port 3111
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port='3111')
+    logging.basicConfig(format = '%(asctime)s, %(message)s', datefmt = '%m/%d/%Y, %I:%M:%S', filename = 'app.log', level = logging.DEBUG)
+    app.run(host='0.0.0.0', port='3111')
