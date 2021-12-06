@@ -82,14 +82,29 @@ def create():
 # Define the Application Healthcheck page
 @app.route('/healthz')
 def healthcheck():
-    response = app.response_class(
-        response = json.dumps({"result" : "OK - healthy"}),
-        status = 200,
-        mimetype = 'application/json'
-    )
+    try:
+        connection = get_db_connection()
+        connection.cursor()
+        connection.execute('SELECT * FROM posts')
+        connection.close()
 
-    app.logger.info(f'Healthcheck page is retrieved successfully')
-    return response
+        response = app.response_class(
+            response = json.dumps({"result" : "OK - healthy"}),
+            status = 200,
+            mimetype = 'application/json'
+        )
+
+        app.logger.info(f'Healthcheck page is retrieved healthy')
+        return response
+    except Exception:
+        response = app.response_class(
+            response = json.dumps({"result" : "ERROR - unhealthy"}),
+            status = 500,
+            mimetype = 'application/json'
+        )
+
+        app.logger.info(f'Healthcheck page is retrieved unhealthy')
+        return response
 
 # Define the Application Metrics page
 @app.route('/metrics')
