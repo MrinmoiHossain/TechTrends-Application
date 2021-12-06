@@ -1,0 +1,8 @@
+apiVersion: v1
+name: techtrends
+description: TechTrends Application Helm Manifests
+keywords: techtrends
+version: 1.0.0
+maintainers:
+- name: Mokit Hossain
+  email: mokit.aust@gmail.com
