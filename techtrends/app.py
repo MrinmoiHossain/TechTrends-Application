@@ -89,7 +89,7 @@ def healthcheck():
         connection.close()
 
         response = app.response_class(
-            response = json.dumps({"result" : "OK - healthy -- V1"}),
+            response = json.dumps({"result" : "OK - healthy -- V2"}),
             status = 200,
             mimetype = 'application/json'
         )
