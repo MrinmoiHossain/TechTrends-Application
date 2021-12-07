@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+import sys
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
@@ -89,7 +90,7 @@ def healthcheck():
         connection.close()
 
         response = app.response_class(
-            response = json.dumps({"result" : "OK - healthy -- V2"}),
+            response = json.dumps({"result" : "OK - healthy"}),
             status = 200,
             mimetype = 'application/json'
         )
@@ -124,5 +125,8 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
-    logging.basicConfig(format = '%(asctime)s, %(message)s', datefmt = '%m/%d/%Y, %I:%M:%S', filename = 'app.log', level = logging.DEBUG)
+    logging.basicConfig(format = '%(asctime)s, %(message)s', datefmt = '%m/%d/%Y, %I:%M:%S', level = logging.DEBUG, handlers = [
+        logging.FileHandler("app.log"),
+        logging.StreamHandler(sys.stdout)
+    ])
     app.run(host='0.0.0.0', port='3111')
