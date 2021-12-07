@@ -4,6 +4,8 @@ metadata:
     name: techtrends-staging
     namespace: argocd
 spec:
+    syncPolicy:
+        automated: {}
     destination:
         namespace: default
         server: https://kubernetes.default.svc
