@@ -5,7 +5,8 @@ metadata:
     namespace: argocd
 spec:
     syncPolicy:
-        automated: {}
+        automated:
+            selfHeal: true
     destination:
         namespace: default
         server: https://kubernetes.default.svc
