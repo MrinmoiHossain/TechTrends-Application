@@ -74,10 +74,9 @@ def create():
                          (title, content))
             connection.commit()
             connection.close()
-
+            
+            app.logger.info(f'A new article "{title}" is created')
             return redirect(url_for('index'))
-
-    app.logger.info(f'A new article "{title}" is created')
     return render_template('create.html')
 
 # Define the Application Healthcheck page
@@ -90,7 +89,7 @@ def healthcheck():
         connection.close()
 
         response = app.response_class(
-            response = json.dumps({"result" : "OK - healthy - Troubleshoot -- V4"}),
+            response = json.dumps({"result" : "OK - healthy"}),
             status = 200,
             mimetype = 'application/json'
         )
